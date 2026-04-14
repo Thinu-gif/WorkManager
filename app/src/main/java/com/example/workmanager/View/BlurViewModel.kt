@@ -18,11 +18,9 @@ import kotlinx.coroutines.flow.stateIn
 
 class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : ViewModel() {
 
-    // 1. Lưu trữ mức độ mờ
     private val _blurLevel = MutableStateFlow(1)
     val blurLevel: StateFlow<Int> = _blurLevel
 
-    // 2. Quan sát trạng thái từ Repository
     val outputWorkInfo: StateFlow<WorkInfo?> = bluromaticRepository.outputWorkInfo
         .stateIn(
             scope = viewModelScope,
@@ -38,7 +36,6 @@ class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : Vi
         bluromaticRepository.applyBlur(blurLevel)
     }
 
-    // 3. Hàm lấy URI ảnh thành phẩm
     fun getOutputUri(workInfo: WorkInfo?): String? {
         return if (workInfo != null && workInfo.state.isFinished) {
             workInfo.outputData.getString(KEY_IMAGE_URI)

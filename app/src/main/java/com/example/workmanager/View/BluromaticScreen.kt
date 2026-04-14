@@ -23,7 +23,7 @@ fun BluromaticScreen(blurViewModel: BlurViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // HIỂN THỊ ẢNH: Dùng placeholder để không bị trắng màn hình
+
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(outputUri ?: R.drawable.android_cupcake)

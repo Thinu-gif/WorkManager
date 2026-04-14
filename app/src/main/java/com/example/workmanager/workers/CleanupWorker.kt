@@ -14,15 +14,14 @@ private const val TAG = "CleanupWorker"
 class CleanupWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
 
     override suspend fun doWork(): Result {
-        // Hiện thông báo để Thi biết app đang dọn dẹp tệp cũ
+
         makeStatusNotification("Đang dọn dẹp các tệp tạm...", applicationContext)
 
-        // Ngủ 3 giây để Thi kịp nhìn thấy thông báo trên thanh Status
         sleep()
 
         return withContext(Dispatchers.IO) {
             return@withContext try {
-                // Đường dẫn đến thư mục chứa ảnh làm mờ tạm thời
+
                 val outputDirectory = File(applicationContext.filesDir, OUTPUT_PATH)
 
                 if (outputDirectory.exists()) {
@@ -30,7 +29,7 @@ class CleanupWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ct
                     if (entries != null) {
                         for (entry in entries) {
                             val name = entry.name
-                            // Kiểm tra nếu là file ảnh (.png) thì xóa đi
+
                             if (name.isNotEmpty() && name.endsWith(".png")) {
                                 val deleted = entry.delete()
                                 Log.i(TAG, "Đã xóa $name: $deleted")

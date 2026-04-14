@@ -1,5 +1,6 @@
 package com.example.workmanager.workers
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -10,6 +11,7 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
+import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.workmanager.CHANNEL_ID
@@ -27,6 +29,7 @@ import java.util.UUID
 /**
  * 1. Hàm hiển thị thông báo (Notification)
  */
+@RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
 fun makeStatusNotification(message: String, context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val name = VERBOSE_NOTIFICATION_CHANNEL_NAME
@@ -47,13 +50,10 @@ fun makeStatusNotification(message: String, context: Context) {
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setVibrate(LongArray(0))
 
-    // Lưu ý: Nếu dòng dưới báo đỏ, Thi nhấn Alt+Enter để thêm quyền POST_NOTIFICATIONS nếu dùng Android 13+
     NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
 }
 
-/**
- * 2. Hàm tạm dừng luồng (Sleep) để dễ quan sát
- */
+
 fun sleep() {
     try {
         Thread.sleep(3000, 0)
@@ -62,9 +62,7 @@ fun sleep() {
     }
 }
 
-/**
- * 3. Hàm thực hiện thuật toán làm mờ ảnh
- */
+
 fun blurBitmap(bitmap: Bitmap, applicationContext: Context): Bitmap {
     lateinit var rsContext: RenderScript
     try {
@@ -85,9 +83,7 @@ fun blurBitmap(bitmap: Bitmap, applicationContext: Context): Bitmap {
     }
 }
 
-/**
- * 4. Hàm lưu Bitmap vào file tạm và trả về Uri
- */
+
 @Throws(IOException::class)
 fun writeBitmapToFile(applicationContext: Context, bitmap: Bitmap): Uri {
     val name = String.format("blur-filter-output-%s.png", UUID.randomUUID().toString())
